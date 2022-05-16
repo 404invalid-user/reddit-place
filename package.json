@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "axios": "^0.26.1",
+    "chartjs-node-canvas": "^4.1.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "ioredis": "^5.0.4",
+    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
+    "mongoose": "^6.3.0",
+    "socket.io": "^4.4.1",
+    "uuid": "^8.3.2",
+    "uuid-token-generator": "^1.0.0"
+  },
+  "name": "reddit-place",
+  "version": "1.0.0",
+  "description": "a reddit r/place clone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/404invalid-user/reddit-place.git"
+  },
+  "keywords": [
+    "reddit"
+  ],
+  "author": "404invalid-user (invaliduser@bruvland.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/404invalid-user/reddit-place/issues"
+  },
+  "homepage": "https://github.com/404invalid-user/reddit-place#readme"
+}
