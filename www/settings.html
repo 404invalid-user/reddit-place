@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | place</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
+    <link href="./base.css" rel="stylesheet">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="r/place">
+    <meta name="author" content="404invalid-user" />
+    <meta content="#7964e4" data-react-helmet="true" name="theme-color">
+    <meta property="og:image" content="/" />
+    <meta property="og:locale" content="en-US">
+
+    <meta name="keywords" content="bruv, place, land, reddit, reddit place, place" />
+    <meta property="og:title" content="Settings | place" />
+    <meta property="og:description" content="The land of all things Bruv, exactly like Reddit's r/place (this is totally a clone) we allow anyone to view the canvas and anyone who has an account to place a 'Block' every x minutes." />
+    <meta property="og:url" content="https://place.com/settings" />
+
+    <style>
+        div.content {
+            margin: 94px 20% 0 20%;
+            min-height: 264px;
+        }
+        
+        h2 {
+            margin-top: 2em;
+        }
+        
+        .tools-wrap {
+            position: relative;
+            color: white;
+        }
+        
+        .tools {
+            width: 100%;
+            height: 47px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tools p {
+            margin: 7px;
+        }
+        
+        @media screen and (max-width:669px) {
+            div.content {
+                margin: 94px 2% 0 2%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="brand">
+            <img src="https://github.com/404invalid-user.png" />
+            <h1><a href="/">place</a></h1>
+        </div>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+            <a href="/about">About</a>
+            <a href="/settings">Settings</a>
+        </div>
+    </nav>
+    <div class="content">
+        <noscript>
+            <p>Please enable javascript</p>
+        </noscript>
+        <p id="info"></p>
+        <h1>settings for
+            <a id="username"></a>
+        </h1>
+        <p>for now please ask an admin to change this</p>
+        <label for="username">username</label><br>
+        <input class="username" type="text" id="username" name="username" placeholder="username" disabled>
+        <br>
+        <label for="discord-public"> Discord username public</label><br>
+        <input type="checkbox" id="discord-public" name="discord-public" value="discord-public">
+        <br>
+        <label for="reddit-public"> Reddit username public</label><br>
+        <input type="checkbox" id="reddit-public" name="reddit-public" value="reddit-public">
+        <br>
+        <br>
+        <a class="button" onclick="save()">Save</a>
+        <br>
+        <div class="tools-wrap" style="position: absolute;bottom: 0;left:0;">
+            <div class="tools">
+                <p>place&copy; 2022</p>
+            </div>
+        </div>
+</body>
+
+<script>
+    var me = {};
+
+    window.onload = async() => {
+        await fetch('/api/me').then(res => res.json()).then(json => {
+            me = json;
+        }).catch(err => {
+            console.log(err.stack || err);
+        });
+
+        const usernametag = document.querySelector('.username');
+        const discordtag = document.getElementById('discord-public');
+        const reddittag = document.getElementById('reddit-public');
+
+        if (me.id != '1') {
+            document.querySelector('.username').value = await me.username;
+            console.log(me.username)
+        }
+
+        if (me.reddit.public) {
+            reddittag.checked = true;
+        }
+        if (me.discord.public) {
+            discordtag.checked = true;
+        }
+
+    }
+
+    function save() {
+        fetch('/api/me', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: usernametag.value,
+                discordPublic: discordtag.checked,
+                redditPublic: reddittag.checked
+            }),
+        }).then(response => response.json()).then(data => {
+            document.getElementById('info').innerText = "saved"
+                // console.log('Success:', data);
+        }).catch((error) => {
+            document.getElementById('info').innerText = "Error saving";
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+</html>
