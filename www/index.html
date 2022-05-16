@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,100&display=swap" rel="stylesheet">
+    <link href="/base.css" rel="stylesheet">
+    <title>place</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="r/place">
+    <meta name="author" content="404invalid-user" />
+    <meta content="#7964e4" data-react-helmet="true" name="theme-color">
+    <meta property="og:image" content="/" />
+    <meta property="og:locale" content="en-US">
+
+    <meta name="keywords" content="bruv, place, land, reddit, reddit place, place" />
+    <meta property="og:title" content="place" />
+    <meta property="og:description" content="The land of all things Bruv, exactly like Reddit's r/place (this is totally a clone) we allow anyone to view the canvas and anyone who has an account to place a 'Block' every x minutes." />
+    <meta property="og:url" content="https://place.com/" />
+
+
+    <style>
+         :root {
+            --colour-background: gray;
+            --colour-text: #000000;
+        }
+        
+        html,
+        body {
+            min-width: 100%;
+            width: 100%;
+            max-width: 100%;
+            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            overflow: hidden !important;
+            position: relative;
+        }
+        
+        .wrap {
+            min-width: 100%;
+            width: 100%;
+            max-width: 100%;
+            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            overflow: hidden !important;
+            position: relative;
+        }
+        
+        body {
+            user-select: none;
+            -moz-user-select: none;
+            background-color: var(--colour-background);
+            color: var(--colour-text);
+            width: 100%;
+        }
+        
+        .wrapper {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        a {
+            color: var(--colour-text);
+        }
+        
+        a:hover {
+            color: var(--colour-text);
+        }
+        
+        .zoomables {
+            border: 1px solid black;
+        }
+        
+        #zoomMe {
+            image-rendering: pixelated;
+            position: absolute;
+            top: 10%;
+            left: 20%;
+        }
+        
+        .tools .colours {
+            padding: 3px;
+            gap: 3px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 4.8px;
+            display: inline-block;
+            max-width: max-content;
+            margin: 6px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .selected {
+            border: 1px solid black;
+        }
+        
+        .tools .colour {
+            height: 20px;
+            width: 20px;
+            -webkit-box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.48);
+            -moz-box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.48);
+            box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.48);
+        }
+        
+        .tools {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .tools .button {
+            background-color: rgb(51, 255, 0);
+        }
+        
+        .tools .button.cant-place {
+            background-color: rgb(163, 163, 163);
+        }
+        
+        .tools .infos {
+            display: flex;
+            width: 99%;
+            position: absolute;
+            bottom: 0;
+        }
+        
+        .admin-menu {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            left: 0;
+            top: 30%;
+            background-color: lightgray;
+            padding: 3px;
+            width: 143px;
+            z-index: 999;
+        }
+        
+        .admin-menu p {
+            text-align: center;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <nav>
+            <div class="brand">
+                <img src="https://github.com/404invalid-user.png" />
+                <h1><a href="/">place</a></h1>
+            </div>
+            <div class="nav">
+                <a href="/login">Login</a>
+                <a href="/about">About</a>
+                <a href="/settings">Settings</a>
+            </div>
+        </nav>
+        <noscript>
+        <p>Please enable javascript for this site to fully work</p>
+    </noscript>
+
+        <div class="admin-menu"></div>
+        <canvas class="zoomables" id="zoomMe" style="border:1px solid #d3d3d3;">Your browser does not support the HTML5 canvas tag.</canvas>
+        <div class="tools-wrap">
+            <div class="tools">
+                <div class="colours">
+                </div>
+                <div class="buttons">
+                    <a class="button" id="place-btn">Place</a>
+                </div>
+                <div class="infos">
+                    <div>online: <a id="onlinec">0</a></div>
+                    <a href="/leaderboard" style="margin-left: auto;" target="_blank">Leader Board</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="canvas.js"></script>
+<script src="zoom.js"></script>
+
+</html>
